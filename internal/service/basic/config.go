@@ -1,4 +1,4 @@
-package service
+package basic
 
 type Config struct {
 	Port int

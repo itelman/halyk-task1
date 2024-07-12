@@ -1,7 +1,7 @@
-package service
+package basic
 
 import (
-	"proxy-server/internal/jsonlog"
+	"proxy-server/internal/service/jsonlog"
 	"sync"
 )
 
