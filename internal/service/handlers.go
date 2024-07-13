@@ -7,6 +7,7 @@ import (
 )
 
 // responseHandler godoc
+//
 //	@Summary		Proxy HTTP request
 //	@Description	Proxies an HTTP request to a specified URL.
 //	@Accept			json
@@ -20,16 +21,6 @@ func (app *Application) responseHandler(w http.ResponseWriter, r *http.Request) 
 	var request models.Request
 	var response models.Response
 
-	if r.URL.Path != "/" {
-		app.notFoundResponse(w, r)
-		return
-	}
-
-	if r.Method != http.MethodPost {
-		app.methodNotAllowedResponse(w, r)
-		return
-	}
-
 	if err := app.readJSON(w, r, &request); err != nil {
 		app.badRequestResponse(w, r, err)
 		return
@@ -40,13 +31,14 @@ func (app *Application) responseHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	// app.Storage.Store(response.ID, envelope{"request": request, "response": response})
+	app.Storage.Store(response.ID, envelope{"request": request, "response": response})
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
 
 // healthCheckHandler godoc
+//
 //	@Summary		Health check
 //	@Description	This endpoint checks the health of the server.
 //	@Tags			health
@@ -55,16 +47,6 @@ func (app *Application) responseHandler(w http.ResponseWriter, r *http.Request) 
 //	@Success		200	{string}	string	"OK"
 //	@Router			/health [get]
 func (app *Application) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/health" {
-		app.notFoundResponse(w, r)
-		return
-	}
-
-	if r.Method != http.MethodGet {
-		app.methodNotAllowedResponse(w, r)
-		return
-	}
-
 	env := envelope{
 		"status": "available",
 		"system_info": map[string]string{

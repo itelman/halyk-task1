@@ -1,12 +1,33 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"os"
-	"proxy-server/internal/app"
+	"proxy-server/internal/service"
+	"proxy-server/internal/service/jsonlog"
 )
 
-var port = os.Getenv("PORT")
+const port = 8080
 
 func main() {
-	app.Run()
+	var cfg service.Config
+
+	flag.IntVar(&cfg.Port, "port", port, "port for api")
+	flag.StringVar(&cfg.Env, "env", "development", "Environment (development|staging|production)")
+
+	flag.Parse()
+
+	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
+
+	app := &service.Application{
+		Config: cfg,
+		Logger: logger,
+	}
+
+	fmt.Printf("Server starting on http://localhost:%d\n\n", port)
+	err := app.Serve()
+	if err != nil {
+		logger.PrintFatal(err, nil)
+	}
 }
