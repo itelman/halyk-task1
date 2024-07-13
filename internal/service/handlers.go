@@ -7,15 +7,15 @@ import (
 )
 
 // responseHandler godoc
-// @Summary Proxy HTTP request
-// @Description Proxies an HTTP request to a specified URL.
-// @Accept  json
-// @Produce  json
-// @Param   request body models.Request true "Request payload"
-// @Success 200 {object} models.Response
-// @Failure 400 {string} string "Bad Request"
-// @Failure 500 {string} string "Internal Server Error"
-// @Router / [post]
+//	@Summary		Proxy HTTP request
+//	@Description	Proxies an HTTP request to a specified URL.
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		models.Request	true	"Request payload"
+//	@Success		200		{object}	models.Response
+//	@Failure		400		{string}	string	"Bad Request"
+//	@Failure		500		{string}	string	"Internal Server Error"
+//	@Router			/ [post]
 func (app *Application) responseHandler(w http.ResponseWriter, r *http.Request) {
 	var request models.Request
 	var response models.Response
@@ -47,13 +47,13 @@ func (app *Application) responseHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 // healthCheckHandler godoc
-// @Summary Health check
-// @Description This endpoint checks the health of the server.
-// @Tags health
-// @Accept  json
-// @Produce  json
-// @Success 200 {string} string "OK"
-// @Router /health [get]
+//	@Summary		Health check
+//	@Description	This endpoint checks the health of the server.
+//	@Tags			health
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{string}	string	"OK"
+//	@Router			/health [get]
 func (app *Application) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/health" {
 		app.notFoundResponse(w, r)
