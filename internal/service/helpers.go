@@ -1,4 +1,4 @@
-package basic
+package service
 
 import (
 	"encoding/json"
@@ -6,24 +6,34 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"proxy-server/pkg/models"
 	"strings"
 )
 
 type envelope map[string]interface{}
 
+func (app *Application) setEnvelope(r models.Response) envelope {
+	return envelope{
+		"id":      r.ID,
+		"status":  r.Status,
+		"headers": r.Headers,
+		"length":  r.Length,
+	}
+}
+
 func (app *Application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
 	// json.MarshIndent performs 65% slower and uses 30% more memory than json.Marshal()
 	// Improved readability is worth it in my opinion
-	js, err := json.MarshalIndent(data, "", "\t")
+	js, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
 
-	js = append(js, '\n')
-
 	// loop through and write headers
-	for key, value := range headers {
-		w.Header()[key] = value
+	if headers != nil {
+		for key, value := range headers {
+			w.Header()[key] = value
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -3,21 +3,21 @@ package app
 import (
 	"flag"
 	"os"
-	"proxy-server/internal/service/basic"
+	"proxy-server/internal/service"
 	"proxy-server/internal/service/jsonlog"
 )
 
 func Run() {
-	var cfg basic.Config
+	var cfg service.Config
 
-	flag.IntVar(&cfg.Port, "port", 4000, "port for api")
+	flag.IntVar(&cfg.Port, "port", 8080, "port for api")
 	flag.StringVar(&cfg.Env, "env", "development", "Environment (development|staging|production)")
 
 	flag.Parse()
 
 	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
-	app := &basic.Application{
+	app := &service.Application{
 		Config: cfg,
 		Logger: logger,
 	}

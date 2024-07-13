@@ -1,4 +1,4 @@
-package basic
+package service
 
 import (
 	"fmt"
@@ -36,7 +36,7 @@ func (app *Application) notFoundResponse(w http.ResponseWriter, r *http.Request)
 
 func (app *Application) methodNotAllowedResponse(w http.ResponseWriter, r *http.Request) {
 	message := fmt.Sprintf("the %s method is not supported for this resource", r.Method)
-	app.errorResponse(w, r, http.StatusNotFound, message)
+	app.errorResponse(w, r, http.StatusMethodNotAllowed, message)
 }
 
 func (app *Application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
