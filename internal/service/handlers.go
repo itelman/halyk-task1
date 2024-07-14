@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"proxy-server/pkg/models"
+	"sync"
 )
+
+var Storage sync.Map
 
 // responseHandler godoc
 //
@@ -31,7 +34,7 @@ func (app *Application) responseHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	app.Storage.Store(response.ID, envelope{"request": request, "response": response})
+	Storage.Store(response.ID, envelope{"request": request, "response": response})
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)

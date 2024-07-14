@@ -6,10 +6,9 @@ import (
 )
 
 type Application struct {
-	Config  Config
-	Logger  *jsonlog.Logger
-	WG      sync.WaitGroup
-	Storage sync.Map
+	Config Config
+	Logger *jsonlog.Logger
+	WG     sync.WaitGroup
 }
 
 const version = "1.0"
