@@ -63,14 +63,18 @@ paths:
       summary: Proxy HTTP request
   /health:
     get:
-      consumes:
-      - application/json
       description: This endpoint checks the health of the server.
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
           schema:
             type: string
       summary: Health check

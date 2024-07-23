@@ -20,15 +20,15 @@ type Response struct {
 	Length  int                 `json:"length"`
 }
 
-func (r *Response) Set(request Request) error {
+func NewResponse(request Request) (Response, error) {
 	id, err := uuid.NewV4()
 	if err != nil {
-		return err
+		return Response{}, err
 	}
 
 	httpReq, err := http.NewRequest(request.Method, request.URL, nil)
 	if err != nil {
-		return err
+		return Response{}, err
 	}
 
 	for key, value := range request.Headers {
@@ -37,19 +37,19 @@ func (r *Response) Set(request Request) error {
 
 	httpResp, err := http.DefaultClient.Do(httpReq)
 	if err != nil {
-		return err
+		return Response{}, err
 	}
 	defer httpResp.Body.Close()
 
 	body, err := ioutil.ReadAll(httpResp.Body)
 	if err != nil {
-		return err
+		return Response{}, err
 	}
 
-	r.ID = id.String()
-	r.Status = httpResp.StatusCode
-	r.Headers = httpResp.Header
-	r.Length = len(body)
-
-	return nil
+	return Response{
+		id.String(),
+		httpResp.StatusCode,
+		httpResp.Header,
+		len(body),
+	}, nil
 }

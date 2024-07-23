@@ -1,4 +1,4 @@
-package service
+package helpers
 
 import (
 	"encoding/json"
@@ -6,12 +6,13 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
-type envelope map[string]interface{}
+var dateRegex = regexp.MustCompile("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$")
 
-func (app *Application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
+func WriteJSON(w http.ResponseWriter, status int, data map[string]interface{}, headers http.Header) error {
 	// json.MarshIndent performs 65% slower and uses 30% more memory than json.Marshal()
 	// Improved readability is worth it in my opinion
 	js, err := json.Marshal(data)
@@ -31,7 +32,7 @@ func (app *Application) writeJSON(w http.ResponseWriter, status int, data envelo
 	return nil
 }
 
-func (app *Application) readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
+func ReadJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 	maxBytes := 1_048_576
 	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
 	dec := json.NewDecoder(r.Body)
